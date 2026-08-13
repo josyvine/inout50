@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    
+    <!-- NEW: Required permissions for precise near-time shift notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- NEW: Required permissions for launching background Text-to-Speech foreground services safely [4] -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="true" />
+
+    <application
+        android:name=".InOutApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/inout"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/inout"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+
+        <!-- NEW: Google AdMob App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2223803405403727~1196967211"/>
+
+        <!-- 1. Splash Screen -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".RoleSelectionActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".AdminSetupActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".AdminDashboardActivity" android:exported="false" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".EmployeeQrScanActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".EmployeeProfileActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".EmployeeDashboardActivity" android:exported="false" android:screenOrientation="portrait" />
+
+        <!-- NEW: Receiver component for precise shift alarm wakeups -->
+        <receiver
+            android:name=".CheckInAlarmReceiver"
+            android:exported="false" />
+
+        <!-- NEW: Background Voice engine service for dynamic TTS speech alerts -->
+        <!-- Configured with mediaPlayback service type to comply with target SDK 34 [4] -->
+        <service
+            android:name=".CheckInVoiceService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+
+        <!-- FILE PROVIDER: Required for QR Image Sharing -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.inout.app.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
